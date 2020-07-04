@@ -1,7 +1,7 @@
-#Account control
-##Code challenge for Technest
+# Account control
+## Code challenge for Technest
 
-###What has been delivered
+### What has been delivered
 - REST controllers based on Webflux, modelling code in a reactive way.
 - Methods for
     - Find an account based by name: _GET accounts/[ACCOUNT_NAME]_
@@ -36,14 +36,14 @@
 - Embedded Redis for storage of accounts
 
 
-###What I tried to achieve
+### What I tried to achieve
 - API based on Webflux and Reactor for ensuring fast response time to requester (logic is quite straightforward though)
 - Immutability on entities
 - Domain Driven Design approach
 - TDD
 - Given than multiple transfer requests on the same accounts and time could bring race conditions, concurrency has been controlled by using Reactor backpressure feature, forcing the reactive pipelines to go through a single threaded executor.
 
-###Improvements that could have been applied, but time ran out
+### Improvements that could have been applied, but time ran out
 - To store in DB transfers and add an API for querying which transfers have been performed and when. However this has not been asked in the test, so only modifications on affected accounts are done. 
 - Cleanup of a warning on startup regarding multiple SLF4J bindings. I suspect this is coming from embedded Redis dependency and solution might be to exclude a particular library on the dependency in pom. 
 - Improve error on HTTP request responses, so that not only HTTP return status is shown, but a message. This could have been done by overriding DefaultErrorAttributes.
