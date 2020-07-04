@@ -1,5 +1,6 @@
 package com.immccc.technest.account;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Value
 @Builder(builderClassName = "AccountBuilder", toBuilder = true)
@@ -23,5 +26,6 @@ class Account {
     Currency currency;
     BigDecimal balance;
 
+    @JsonInclude(NON_NULL)
     Boolean treasury;
 }

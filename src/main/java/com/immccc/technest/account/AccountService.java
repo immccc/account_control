@@ -26,5 +26,26 @@ public class AccountService {
                 });
     }
 
+    public Mono<Account> update(Account account) {
+        return find(account.getName())
+                .switchIfEmpty(Mono.error(AccountNotExistingException::new))
+                .doOnNext(storedAccount -> assertTreasuryPropertyUnchanged(account, storedAccount))
+                .flatMap(storedAccount -> {
+                    Account updatedAccount = Account.builder()
+                            .name(account.getName())
+                            .currency(account.getCurrency())
+                            .balance(account.getBalance())
+                            .treasury(storedAccount.getTreasury())
+                            .build();
+                    return operations.opsForValue().set(account.getName(), updatedAccount);
+                }).map(unused -> account);
+    }
+
+    private void assertTreasuryPropertyUnchanged(Account account, Account storedAccount) {
+        if(account.getTreasury() != null && account.getTreasury() != storedAccount.getTreasury()) {
+            throw new TreasuryPropertyCannotBeModifiedException();
+        }
+    }
+
 
 }

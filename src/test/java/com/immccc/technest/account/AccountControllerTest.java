@@ -89,6 +89,36 @@ class AccountControllerTest {
         }
     }
 
+    static Stream<Arguments> updateParametersProvider() {
+        return Stream.of(
+                arguments(null, OK),
+                arguments(new TreasuryPropertyCannotBeModifiedException(), PRECONDITION_FAILED),
+                arguments(new AccountNotExistingException(), PRECONDITION_FAILED)
+        );
+    }
+
+    @DisplayName("PUT")
+    @ParameterizedTest(name = "When exception is {0}, http status is {1}")
+    @MethodSource("updateParametersProvider")
+    void update(Exception exception, HttpStatus expectedHttpStatus) {
+        Account account = givenAccount();
+
+        if(exception != null) {
+            doThrow(exception).when(accountService).update(account);
+        }
+
+        WebTestClient.ResponseSpec responseSpec = webTestClient.put()
+                .uri("/accounts")
+                .accept(APPLICATION_JSON)
+                .bodyValue(account)
+                .exchange()
+                .expectStatus().isEqualTo(expectedHttpStatus);
+
+        if(exception == null) {
+            responseSpec.expectBody(Account.class);
+        }
+    }
+
     private Account givenAccount() {
         return Account.builder()
                 .name(ACCOUNT_NAME)
