@@ -11,6 +11,10 @@ public class AccountService {
 
     private final ReactiveRedisOperations<String, Account> operations;
 
+    public Mono<Account> find(String name) {
+        return operations.opsForValue().get(name);
+    }
+
     public Mono<Account> create(Account account) {
         return operations.opsForValue()
                 .setIfAbsent(account.getName(), account).map(success -> {

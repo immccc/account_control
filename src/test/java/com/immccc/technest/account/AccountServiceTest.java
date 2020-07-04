@@ -42,6 +42,18 @@ class AccountServiceTest {
 
 
     @Test
+    @DisplayName("Should find an account")
+    void find() {
+        Account expectedAccount = givenAccount();
+
+        doReturn(Mono.just(expectedAccount)).when(valueOperations).get(expectedAccount.getName());
+
+        service.find(ACCOUNT_NAME)
+                .subscribe(account -> assertThat(account).isNotNull());
+    }
+
+
+    @Test
     @DisplayName("Should create account when it does not exist")
     void create() {
         Account account = givenAccount();
